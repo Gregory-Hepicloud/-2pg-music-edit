@@ -84,10 +84,18 @@ export class Player {
   private async playTrack(track: Track, seek = 0) {
     await this.join();
 
-    const stream = downloadYT(track.url, { fmt: 'mp3', filter: 'audioonly' });
-    let dispatcher = this.connection.play(stream, { seek, volume: 1 }).on("finish", () => {
-      emitter.emit('end', this);
-    })
+    const ytdlContent = ytdl(song.url, {
+      filter: 'audioonly',
+      opusEncoded: true,
+      encoderArgs: ['-ss', song.startTime, '-t', song.endTime]
+    });
+
+    const dispatcher = this.connection
+      .play(track.url, { type: 'opus' })
+      .on('finish', () => {
+        emitter.emit('end', this);
+      })
+      .on('error', (error) => console.error(error));
 
     if (seek <= 0)
       emitter.emit('trackStart', this, track);
