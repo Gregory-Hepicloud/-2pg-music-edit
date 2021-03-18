@@ -85,11 +85,7 @@ export class Player {
     await this.join();
 
     const stream = downloadYT(track.url, { fmt: 'mp3', filter: 'audioonly' });
-    let dispatcher = this.connection.play(stream, {
-      seek,
-      volume: 1,
-      type: "opus"
-    }).on("finish", () => {
+    let dispatcher = this.connection.play(stream, { seek, volume: 1 }).on("finish", () => {
       emitter.emit('end', this);
     })
 
