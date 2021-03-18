@@ -1,6 +1,6 @@
 {
   "name": "@2pg/music-edit",
-  "version": "1.1.6",
+  "version": "0.0.2",
   "description": "Discord.js music used for bobbot",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
@@ -25,7 +25,7 @@
     "discord.js music"
   ],
   "prepublish": "tsc",
-  "author": "theADAMJR & Devorylive",
+  "author": "coyotefr",
   "license": "ISC",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
