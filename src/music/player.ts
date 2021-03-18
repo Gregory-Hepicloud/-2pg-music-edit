@@ -3,6 +3,7 @@ import downloadYT from 'discord-ytdl-core';
 import { GuildMember, TextChannel, VoiceChannel, VoiceConnection } from 'discord.js';
 import Q from './q';
 import { emitter } from './events';
+const ytdl = require('ytdl-core');
 
 export class Player {
   readonly q = new Q<Track>();
@@ -84,18 +85,17 @@ export class Player {
   private async playTrack(track: Track, seek = 0) {
     await this.join();
 
-    const ytdlContent = ytdl(song.url, {
-      filter: 'audioonly',
-      opusEncoded: true,
-      encoderArgs: ['-ss', song.startTime, '-t', song.endTime]
+    let stream = ytdl(track.url, {
+      filter: "audioonly",
+      opusEncoded: false,
+      encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
     });
 
-    const dispatcher = this.connection
-      .play(track.url, { type: 'opus' })
-      .on('finish', () => {
-        emitter.emit('end', this);
-      })
-      .on('error', (error) => console.error(error));
+    let dispatcher = this.connection.play(stream, {
+      type: "converted"
+    }).on("finish", () => {
+      emitter.emit('end', this);
+    })
 
     if (seek <= 0)
       emitter.emit('trackStart', this, track);
