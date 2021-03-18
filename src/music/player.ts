@@ -85,17 +85,11 @@ export class Player {
   private async playTrack(track: Track, seek = 0) {
     await this.join();
 
-    let stream = ytdl(track.url, {
-      filter: "audioonly",
-      opusEncoded: false,
-      encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200']
+    const stream = ytdl(track.url, {
+      opusEncoded: true
     });
 
-    let dispatcher = this.connection.play(stream, {
-      type: "converted"
-    }).on("finish", () => {
-      emitter.emit('end', this);
-    })
+    this.connection.play(stream, { type: "opus" })
 
     if (seek <= 0)
       emitter.emit('trackStart', this, track);
